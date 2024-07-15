@@ -7,7 +7,7 @@ public struct GroupText: View {
         self.texts = texts
     }
     
-    var body: some View {
+    public var body: some View {
         expandTexts
     }
     
