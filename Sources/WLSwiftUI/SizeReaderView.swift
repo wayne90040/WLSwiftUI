@@ -29,7 +29,7 @@ public struct SizeReaderViewModifier: ViewModifier {
 }
 
 public extension View {
-    public func sizeChanged(sizeChanged: @escaping (CGSize) -> Void) -> some View {
+    func sizeChanged(sizeChanged: @escaping (CGSize) -> Void) -> some View {
         modifier(SizeReaderViewModifier(sizeChanged: sizeChanged))
     }
 }
