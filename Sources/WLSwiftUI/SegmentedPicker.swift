@@ -1,12 +1,15 @@
 import SwiftUI
 
 // https://github.com/KazaiMazai/SwiftySegmentedPicker
-public struct SegmentedPicker<Element, Content: View, Selection: View>: View {
+public struct SegmentedPicker<Element: Equatable, Content: View, Selection: View>: View {
     
     public typealias Data = [Element]
     
-    @State private var frames: [CGRect]
-    @Binding private var selectedIndex: Data.Index?
+    @State
+    private var frames: [CGRect]
+    
+    @Binding
+    private var selectedIndex: Data.Index?
     
     private let data: Data
     private let selection: () -> Selection
@@ -47,7 +50,6 @@ public struct SegmentedPicker<Element, Content: View, Selection: View>: View {
             
             HStack(spacing: .zero) {
                 ForEach(data.indices, id: \.self) { index in
-                    
                     Button {
                         selectedIndex = index
                     } label: {
@@ -58,7 +60,15 @@ public struct SegmentedPicker<Element, Content: View, Selection: View>: View {
                         GeometryReader { proxy in
                             Color.clear
                                 .onAppear {
-                                    frames[index] = proxy.frame(in: .global)
+                                    if frames.count > index {
+                                        frames[index] = proxy.frame(in: .global)
+                                    }
+                                }
+                                // data 更新時, 同步更新 frames 的大小
+                                .onChange(of: data) { _ in
+                                    if frames.count > index {
+                                        frames[index] = proxy.frame(in: .global)
+                                    }
                                 }
                         }
                     )
@@ -69,6 +79,11 @@ public struct SegmentedPicker<Element, Content: View, Selection: View>: View {
                         }
                 }
             }
+        }
+        // 當 Data 更新時, 因為 frames 為 @State, 所以好像沒有重置
+        // 所以這邊加 onChange 同步更新 frames
+        .onChange(of: data) {
+            frames = .init(repeating: .zero, count: $0.count)
         }
     }
 }
