@@ -24,4 +24,13 @@ public extension View {
     func onDidLoad(action: @escaping () -> Void) -> some View {
         modifier(ViewDidLoadModifier(action: action))
     }
+    
+    func onAsyncDidLoad(action: @escaping @Sendable () async -> Void) -> some View {
+        self
+            .onDidLoad {
+                Task {
+                    await action()
+                }
+            }
+    }
 }
