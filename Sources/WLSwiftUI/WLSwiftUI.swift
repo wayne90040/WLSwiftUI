@@ -1,4 +1,4 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
-import SwiftUI
-import UIKit
+@_exported import SwiftUI
+@_exported import UIKit
